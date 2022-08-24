@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ruoyi.iml" filepath="$PROJECT_DIR$/ruoyi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary/smartlibrary.iml" filepath="$PROJECT_DIR$/smartlibrary/smartlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-admin/smartlibrary-admin.iml" filepath="$PROJECT_DIR$/smartlibrary-admin/smartlibrary-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-common/smartlibrary-common.iml" filepath="$PROJECT_DIR$/smartlibrary-common/smartlibrary-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-framework/smartlibrary-framework.iml" filepath="$PROJECT_DIR$/smartlibrary-framework/smartlibrary-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-generator/smartlibrary-generator.iml" filepath="$PROJECT_DIR$/smartlibrary-generator/smartlibrary-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-quartz/smartlibrary-quartz.iml" filepath="$PROJECT_DIR$/smartlibrary-quartz/smartlibrary-quartz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartlibrary-system/smartlibrary-system.iml" filepath="$PROJECT_DIR$/smartlibrary-system/smartlibrary-system.iml" />
+    </modules>
+  </component>
+</project>

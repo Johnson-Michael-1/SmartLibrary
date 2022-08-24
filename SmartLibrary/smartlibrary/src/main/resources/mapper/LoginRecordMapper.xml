@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.LoginRecordMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.LoginRecord" >
+        <id column="login_id" property="loginId"  />
+        <result column="rd_name" property="rdName" />
+        <result column="rd_id_number" property="rdIdNumber" />
+        <result column="rd_phone" property="rdPhone"  />
+        <result column="login_time" property="loginTime"  />
+        <result column="login_type" property="loginType" />
+        <result column="rd_sex" property="rdSex" />
+        <result column="rd_state" property="rdState" />
+    </resultMap>
+
+    <sql id="SelectLoginRecordVo" >
+    login_id, rd_name, rd_id_number, rd_phone, login_time, login_type, rd_sex, rd_state
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="string" >
+        select
+        <include refid="SelectLoginRecordVo" />
+        from sl_login_record
+        where login_id = #{loginId}
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long" >
+        delete from sl_login_record where login_id in
+        <foreach collection="array" item="loginId" open="(" separator="," close=")">
+            #{loginId}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.LoginRecord" useGeneratedKeys="true">
+        insert into sl_login_record ( rd_name, rd_id_number,rd_phone,
+         login_time, login_type, rd_sex, rd_state)
+        values ( #{rdName}, #{rdIdNumber},#{rdPhone},
+         #{loginTime}, #{loginType}, #{rdSex}, #{rdState})
+    </insert>
+
+    <update id="updateByIdNumber" parameterType="com.ruoyi.smartlibrary.pojo.LoginRecord" >
+        update sl_login_record
+        set
+          rd_name = #{rdName},
+          rd_id_number = #{rdIdNumber},
+          rd_phone = #{rdPhone},
+          login_time = #{loginTime},
+          login_type = #{loginType},
+          rd_sex = #{rdSex},
+          rd_state = #{rdState}
+        where rd_id_number = #{rdIdNumber}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.LoginRecord">
+        select
+        <include refid="SelectLoginRecordVo" />
+        from sl_login_record
+        <where>
+            <if test="rdName != null and rdName != ''">
+                AND rd_name like concat('%', #{rdName}, '%')
+            </if>
+            <if test="rdIdNumber != null and rdIdNumber != ''">
+                AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+            </if>
+            <if test="rdPhone != null and rdPhone != ''">
+                AND rd_phone like concat('%', #{rdPhone}, '%')
+            </if>
+            <if test="loginTime != null and loginTime != ''">
+                AND login_time like concat('%', #{loginTime},'%')
+            </if>
+            <if test="loginType != null and loginType != ''">
+                AND login_type like concat('%', #{loginType},'%')
+            </if>
+            <if test="rdState != null and rdState != ''">
+                AND rd_state like concat('%', #{rdState},'%')
+            </if>
+        </where>
+        order by login_id desc
+    </select>
+
+
+
+</mapper>

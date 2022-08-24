@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.RecordHistoryMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.RecordHistory" >
+        <id column="open_id" property="openId" />
+        <result column="org_id" property="orgId"  />
+        <result column="dev_sn" property="devSn"  />
+        <result column="dev_name" property="devName"  />
+        <result column="take_photo_path" property="takePhotoPath"  />
+        <result column="person_name" property="personName"  />
+        <result column="card_no" property="cardNo"  />
+        <result column="open_mode" property="openMode"  />
+        <result column="open_type" property="openType"  />
+        <result column="org_name" property="orgName"  />
+        <result column="dev_address" property="devAddress"  />
+        <result column="open_time" property="openTime" />
+        <result column="open_result" property="openResult" />
+    </resultMap>
+
+    <sql id="SelectRecordHistoryVo">
+        open_id, org_id, dev_sn, dev_name, take_photo_path, person_name, card_no, open_mode, open_type, org_name, dev_address, open_time, open_result
+    </sql>
+
+    <select id="getRecordHistoryById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectRecordHistoryVo" />
+        from sl_record_history
+        where open_id = #{openId}
+    </select>
+
+    <delete id="deleteRecordHistoryByIds" parameterType="java.lang.Long" >
+        delete from sl_record_history
+        where open_id in
+        <foreach collection="array" item="openId" open="(" separator="," close=")">
+            #{openId}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.RecordHistory" useGeneratedKeys="true">
+        insert into sl_record_history (org_id, dev_sn, dev_name, take_photo_path, person_name, card_no,
+          open_mode, open_type, org_name,
+          dev_address, open_time, open_result)
+        values ( #{orgId}, #{devSn}, #{devName}, #{takePhotoPath}, #{personName}, #{cardNo},
+          #{openMode}, #{openType}, #{orgName},
+          #{devAddress}, #{openTime}, #{openResult} )
+    </insert>
+
+    <update id="updateRecordHistory" parameterType="com.ruoyi.smartlibrary.pojo.RecordHistory" >
+        update sl_record_history
+        set org_id = #{orgId},
+          dev_sn = #{devSn},
+          dev_name = #{devName},
+          take_photo_path = #{takePhotoPath},
+          person_name = #{personName},
+          card_no = #{cardNo},
+          open_mode = #{openMode},
+          open_type = #{openType},
+          org_name = #{orgName},
+          dev_address = #{devAddress},
+          open_time = #{openTime},
+          open_result = #{openResult}
+        where open_id = #{openId}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.RecordHistory">
+        select
+        <include refid="SelectRecordHistoryVo" />
+        from sl_record_history
+        <where>
+            <if test="orgId != null and orgId != ''">
+                AND org_id like concat('%', #{orgId}, '%')
+            </if>
+            <if test="devName != null and devName != ''">
+                AND dev_name like concat('%', #{devName}, '%')
+            </if>
+            <if test="personName != null and personName != ''">
+                AND person_name like concat('%', #{personName}, '%')
+            </if>
+            <if test="cardNo != null and cardNo != ''">
+                AND card_no like concat('%', #{cardNo},'%')
+            </if>
+            <if test="openType != null and openType != ''">
+                AND open_type like concat('%', #{openType},'%')
+            </if>
+            <if test="openMode != null and openMode != ''">
+                AND open_mode like concat('%', #{openMode},'%')
+            </if>
+            <if test="openResult != null and openResult != ''">
+                AND open_result like concat('%', #{openResult},'%')
+            </if>
+            <if test="openTime != null and openTime != ''">
+                AND open_time like concat('%', #{openTime},'%')
+            </if>
+        </where>
+        order by open_id asc
+    </select>
+
+
+</mapper>

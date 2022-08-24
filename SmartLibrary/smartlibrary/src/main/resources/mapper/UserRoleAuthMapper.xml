@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ruoyi.smartlibrary.mapper.UserRoleAuthMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.UserRoleAuth" >
+        <id column="role_id" property="roleId"  />
+        <id column="role_name" property="roleName" />
+        <result column="role_key" property="roleKey"  />
+        <result column="status" property="status"  />
+        <result column="role_sort" property="roleSort"  />
+        <result column="data_scope" property="dataScope"  />
+        <result column="org_check_strictly" property="orgCheckStrictly"  />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <sql id="SelectRoleAuthVo" >
+        role_id, role_name, role_key, status, role_sort, data_scope,
+        org_check_strictly, create_by, create_time, update_by, update_time, remark
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectRoleAuthVo" />
+        from sl_userrole_auth
+        where role_id = #{roleId}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from sl_userrole_auth
+    where role_id = #{roleId}
+  </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.UserRoleAuth" useGeneratedKeys="true">
+        insert into sl_userrole_auth ( role_id, role_name,
+          role_key, status, role_sort,
+          data_scope, org_check_strictly, create_by,
+          create_time, update_by, update_time, remark
+          )
+        values ( #{roleId}, #{roleName},
+          #{roleKey}, #{status}, #{roleSort},
+          #{dataScope}, #{orgCheckStrictly}, #{createBy},
+          #{createTime}, #{updateBy}, #{updateTime}, #{remark}
+          )
+    </insert>
+
+    <update id="updateById" parameterType="java.lang.Long" >
+        update sl_userrole_auth
+        set
+          role_id = #{roleId},
+          role_name = #{roleName},
+          role_key = #{roleKey},
+          status = #{status},
+          role_sort = #{roleSort},
+          data_scope = #{dataScope},
+          org_check_strictly = #{orgCheckStrictly},
+          create_by = #{createBy},
+          create_time = #{createTime},
+          update_by = #{updateBy},
+          update_time = #{updateTime},
+          remark = #{remark}
+        where role_id = #{roleId}
+    </update>
+
+</mapper>

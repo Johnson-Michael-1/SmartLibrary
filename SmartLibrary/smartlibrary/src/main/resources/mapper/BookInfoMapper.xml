@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.BookInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.BookInfo" >
+    <id column="bk_id" property="bkId"  />
+    <id column="bk_ISBN" property="bkIsbn"  />
+    <id column="bk_rfid" property="bkRfid"  />
+    <result column="bk_name" property="bkName"  />
+    <result column="bk_img" property="bkImg" />
+    <result column="bk_author" property="bkAuthor"  />
+    <result column="bk_price" property="bkPrice"  />
+    <result column="bk_type" property="bkType" />
+    <result column="bk_press" property="bkPress"  />
+    <result column="bk_abstract" property="bkAbstract"  />
+    <result column="bk_state" property="bkState" />
+    <result column="publish_time" property="publishTime" />
+    <result column="bk_pagination" property="bkPagination" />
+    <result column="dept_id" property="deptId" />
+    <result column="dept_name" property="deptName" />
+  </resultMap>
+
+  <sql id="SelectBookInfoVo" >
+    bk_id, bk_ISBN, bk_rfid, bk_name, bk_img, bk_author, bk_price, bk_type, bk_press, bk_abstract, bk_state, publish_time, bk_pagination, dept_id, dept_name
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectBookInfoVo" />
+    from sl_bookinfo
+    where bk_id = #{bkId}
+  </select>
+
+  <delete id="deleteByIds" parameterType="java.lang.Long" >
+      delete from sl_bookinfo where bk_id in
+      <foreach collection="array" item="bkId" open="(" separator="," close=")">
+        #{bkId}
+      </foreach>
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.BookInfo" useGeneratedKeys="true">
+    insert into sl_bookinfo (bk_ISBN,bk_rfid, bk_name, bk_img,
+      bk_author, bk_price, bk_type, 
+      bk_press, bk_abstract, bk_state, publish_time, bk_pagination,dept_id, dept_name
+      )
+    values ( #{bkIsbn}, #{bkRfid}, #{bkName}, #{bkImg},
+      #{bkAuthor}, #{bkPrice}, #{bkType},
+      #{bkPress}, #{bkAbstract}, #{bkState}, #{publishTime}, #{bkPagination},#{deptId}, #{deptName}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.BookInfo" >
+    update sl_bookinfo
+    set
+      bk_ISBN = #{bkIsbn},
+      bk_rfid = #{bkRfid},
+      bk_name = #{bkName},
+      bk_img = #{bkImg},
+      bk_author = #{bkAuthor},
+      bk_price = #{bkPrice},
+      bk_type = #{bkType},
+      bk_press = #{bkPress},
+      bk_abstract = #{bkAbstract},
+      bk_state = #{bkState},
+      publish_time = #{publishTime},
+      bk_pagination = #{bkPagination},
+      dept_id = #{deptId},
+      dept_name = #{deptName}
+    where bk_id = #{bkId}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.BookInfo">
+    select
+    <include refid="SelectBookInfoVo" />
+    from sl_bookinfo
+    <where>
+      <if test="deptId != null and deptId != 0">
+        AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+      </if>
+      <if test="bkName != null and bkName != ''">
+        AND bk_name like concat('%', #{bkName}, '%')
+      </if>
+      <if test="bkAuthor != null and bkAuthor != ''">
+        AND bk_author like concat('%', #{bkAuthor}, '%')
+      </if>
+      <if test="bkType != null and bkType != ''">
+        AND bk_type like concat('%', #{bkType}, '%')
+      </if>
+      <if test="bkState != null and bkState != ''">
+        AND bk_state like concat('%', #{bkState},'%')
+      </if>
+    </where>
+    order by bk_id desc
+  </select>
+
+  <select id="selectByRfid" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="SelectBookInfoVo"/>
+    from sl_bookinfo
+    where bk_rfid = #{bkRfid}
+  </select>
+
+</mapper>

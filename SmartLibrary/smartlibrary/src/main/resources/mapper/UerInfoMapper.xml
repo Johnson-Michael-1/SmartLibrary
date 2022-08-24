@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.UerInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.UerInfo" >
+    <id column="ma_id" property="maId"  />
+    <id column="ma_id_number" property="maIdNumber"  />
+    <result column="ma_name" property="maName"  />
+    <result column="org_name" property="orgName"  />
+    <result column="ma_account" property="maAccount"  />
+    <result column="ma_password" property="maPassword"  />
+    <result column="ma_phone" property="maPhone"  />
+    <result column="ma_state" property="maState"  />
+    <result column="create_by" property="createBy"  />
+    <result column="create_time" property="createTime"  />
+    <result column="update_by" property="updateBy"  />
+    <result column="update_time" property="updateTime"  />
+  </resultMap>
+
+  <sql id="SelectUserInfoVo" >
+    ma_id, ma_id_number, ma_name, org_name, ma_account, ma_password, ma_phone, ma_state, 
+    create_by, create_time, update_by, update_time
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectUserInfoVo" />
+    from sl_userinfo
+    where ma_id = #{maId}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from sl_userinfo
+    where ma_id = #{maId}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.UerInfo" useGeneratedKeys="true">
+    insert into sl_userinfo ( ma_id_number, ma_name,
+      org_name, ma_account, ma_password, 
+      ma_phone, ma_state, create_by, 
+      create_time, update_by, update_time
+      )
+    values ( #{maIdNumber}, #{maName},
+      #{orgName}, #{maAccount}, #{maPassword},
+      #{maPhone}, #{maState}, #{createBy},
+      #{createTime}, #{updateBy}, #{updateTime}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="java.lang.Long" >
+    update sl_userinfo
+    set
+      ma_id_number = #{maIdNumber},
+      ma_name = #{maName},
+      org_name = #{orgName},
+      ma_account = #{maAccount},
+      ma_password = #{maPassword},
+      ma_phone = #{maPhone},
+      ma_state = #{maState},
+      create_by = #{createBy},
+      create_time = #{createTime},
+      update_by = #{updateBy},
+      update_time = #{updateTime}
+    where ma_id = #{maId}
+  </update>
+
+</mapper>

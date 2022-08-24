@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.FirmwareRecordMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.FirmwareRecord" >
+        <id column="id" property="id"  />
+        <result column="dev_sn" property="devSn" />
+        <result column="old_version" property="oldVersion" />
+        <result column="new_version" property="newVersion"  />
+        <result column="upgrade_time" property="upgradeTime"  />
+        <result column="update_install" property="updateInstall" />
+        <result column="update_result" property="updateResult" />
+        <result column="dev_name" property="devName" />
+        <result column="dept_id" property="deptId" />
+        <result column="dept_name" property="deptName" />
+    </resultMap>
+
+    <sql id="SelectFirmwareRecordVo" >
+    id, dev_sn, old_version, new_version, upgrade_time, update_install, update_result, dev_name, dept_id, dept_name
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectFirmwareRecordVo" />
+        from sl_firmware_record
+        where id = #{id}
+    </select>
+
+<!--    <delete id="deleteByIds" parameterType="java.lang.Long" >-->
+<!--        delete from sl_firmware_record where id in-->
+<!--        <foreach collection="array" item="id" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.FirmwareRecord" useGeneratedKeys="true">
+        insert into sl_firmware_record ( dev_sn, old_version, new_version, upgrade_time, update_install, update_result, dev_name, dept_id, dept_name )
+        values ( #{devSn}, #{oldVersion},#{newVersion},#{upgradeTime},
+          #{updateInstall}, #{updateResult}, #{devName}, #{deptId}, #{deptName} )
+    </insert>
+
+<!--    <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.FirmwareRecord" >-->
+<!--        update sl_firmware_record-->
+<!--        set-->
+<!--          dev_sn = #{apkName},-->
+<!--          version = #{version},-->
+<!--          download_url = #{downloadUrl},-->
+<!--          update_log = #{updateLog},-->
+<!--          upload_time = #{uploadTime}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.FirmwareRecord">
+        select
+        <include refid="SelectFirmwareRecordVo" />
+        from sl_firmware_record
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+            </if>
+            <if test="devName != null and devName != ''">
+                AND dev_name like concat('%', #{devName}, '%')
+            </if>
+            <if test="updateResult != null and updateResult != ''">
+                AND update_result like concat('%', #{updateResult}, '%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.AlarmInfoMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.AlarmInfo" >
+        <id column="alarm_id" property="alarmId" />
+        <result column="dev_sn" property="devSn"  />
+        <result column="dept_id" property="deptId"  />
+        <result column="dept_name" property="deptName"  />
+        <result column="rd_name" property="rdName"  />
+        <result column="rd_id_number" property="rdIdNumber"  />
+        <result column="dev_name" property="devName" />
+        <result column="org_id" property="orgId"  />
+        <result column="org_name" property="orgName"  />
+        <result column="alarm_time" property="alarmTime"  />
+        <result column="alarm_type" property="alarmType"  />
+    </resultMap>
+
+
+    <sql id="SelectAlarmVo" >
+        alarm_id, dev_sn, dept_id, dept_name, rd_name, rd_id_number, dev_name, org_id, org_name, alarm_time, alarm_type
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Long" >
+        select
+        <include refid="SelectAlarmVo" />
+        from sl_alarminfo
+        where alarm_id = #{alarmId}
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long" >
+        delete from sl_alarminfo
+        where alarm_id in
+        <foreach collection="array" item="alarmId" open="(" separator="," close=")">
+            #{alarmId}
+        </foreach>
+   </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.AlarmInfo" useGeneratedKeys="true">
+        insert into sl_alarminfo (
+          dev_sn, dept_id, dept_name, rd_name, rd_id_number,
+          dev_name,
+        <if test="orgId != null and orgId != ''">org_id,</if>
+          org_name,alarm_time, alarm_type
+          )
+        values (
+          #{devSn}, #{deptId}, #{deptName}, #{rdName}, #{rdIdNumber},
+          #{devName},
+        <if test="orgId != null and orgId != ''">#{orgId},</if>
+          #{orgName},#{alarmTime}, #{alarmType}
+          )
+    </insert>
+
+    <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.AlarmInfo" >
+        update sl_alarminfo
+        set dev_sn = #{devSn},
+          dept_id = #{deptId},
+          dept_name = #{deptName},
+          rd_name = #{rdName},
+          rd_id_number = #{rdIdNumber},
+          dev_name = #{devName},
+          org_id = #{orgId},
+          org_name = #{orgName},
+          alarm_time = #{alarmTime},
+          alarm_type = #{alarmType}
+        where alarm_id = #{alarmId}
+      </update>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select
+        alarm_id, dev_sn, dept_id, dept_name, rd_name, rd_id_number, dev_name, org_id, org_name, alarm_time, alarm_type
+        from sl_alarminfo
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+            </if>
+            <if test="devName != null and devName != ''">
+                AND dev_name like concat('%', #{devName}, '%')
+            </if>
+            <if test="devSn != null and devSn != ''">
+                AND dev_sn like concat('%', #{devSn}, '%')
+            </if>
+            <if test="alarmType != null and alarmType != ''">
+                AND alarm_type like concat('%', #{alarmType},'%')
+            </if>
+            <if test="alarmTime != null and alarmTime != ''">
+                AND alarm_time like concat('%', #{alarmTime},'%')
+            </if>
+        </where>
+        order by 1 asc
+    </select>
+
+</mapper>

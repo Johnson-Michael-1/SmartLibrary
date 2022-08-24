@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.DevInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.DevInfo" >
+    <id column="dev_id" property="devId"  />
+    <result column="dev_sn" property="devSn"  />
+    <result column="dev_name" property="devName" />
+    <result column="dept_id" property="deptId" />
+    <result column="dept_name" property="deptName" />
+    <result column="org_name" property="orgName"  />
+    <result column="dev_type" property="devType"  />
+    <result column="link_time" property="linkTime"  />
+    <result column="dev_address" property="devAddress"  />
+    <result column="dev_state" property="devState"  />
+    <result column="dev_remark" property="devRemark"  />
+  </resultMap>
+
+  <sql id="SelectDeviceVo" >
+    dev_id, dev_sn, dev_name, dept_id, dept_name, org_name, dev_type, link_time, dev_address, dev_state, dev_remark
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectDeviceVo" />
+    from sl_devinfo
+    where dev_id = #{devId}
+  </select>
+
+  <delete id="deleteByIds" parameterType="java.lang.Long" >
+    delete from sl_devinfo where dev_id in
+    <foreach collection="array" item="devId" open="(" separator="," close=")">
+      #{devId}
+    </foreach>
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.DevInfo" useGeneratedKeys="true">
+    insert into sl_devinfo (dev_sn, dev_name, dept_id, dept_name, org_name,
+      dev_type, link_time, dev_address,
+      dev_state, dev_remark)
+    values ( #{devSn}, #{devName}, #{deptId}, #{deptName}, #{orgName},
+      #{devType}, #{linkTime}, #{devAddress},
+      #{devState}, #{devRemark})
+  </insert>
+
+  <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.DevInfo" >
+    update sl_devinfo
+    set dev_sn = #{devSn},
+      dev_name = #{devName},
+      dept_id = #{deptId},
+      dept_name = #{deptName},
+      org_name = #{orgName},
+      dev_type = #{devType},
+      link_time = #{linkTime},
+      dev_address = #{devAddress},
+      dev_state = #{devState},
+      dev_remark = #{devRemark}
+    where dev_id = #{devId}
+  </update>
+
+  <select id="selectList" parameterType="com.ruoyi.smartlibrary.pojo.DevInfo" resultMap="BaseResultMap">
+    select
+    <include refid="SelectDeviceVo" />
+    from sl_devinfo
+    <where>
+      <if test="devName != null and devName != ''">
+        AND dev_name like concat('%', #{devName}, '%')
+      </if>
+      <if test="deptId != null and deptId != 0">
+        AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+      </if>
+      <if test="devAddress != null and devAddress != ''">
+        AND dev_address like concat('%', #{devAddress}, '%')
+      </if>
+      <if test="devState != null and devState != ''">
+        AND dev_state like concat('%', #{devState},'%')
+      </if>
+    </where>
+    order by dev_id desc
+  </select>
+
+  <update id="updateByDevSn" parameterType="string" >
+    update sl_devinfo
+    set dev_state = '0'
+    where dev_sn = #{devSn}
+  </update>
+
+  <select id="selectByDevSn" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="SelectDeviceVo" />
+    from sl_devinfo
+    where dev_sn = #{devSn}
+  </select>
+
+  <select id="selectListDev" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.DevInfo">
+    select
+    <include refid="SelectDeviceVo" />
+    from sl_devinfo
+    <where>
+      <if test="devName != null and devName != ''">
+        AND dev_name like concat('%', #{devName}, '%')
+      </if>
+      <if test="deptId != null and deptId != 0">
+        AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+      </if>
+      <if test="devAddress != null and devAddress != ''">
+        AND dev_address like concat('%', #{devAddress}, '%')
+      </if>
+      <if test="devState != null and devState != ''">
+        AND dev_state like concat('%', #{devState},'%')
+      </if>
+        AND dev_state = 0
+    </where>
+    order by dev_id desc
+  </select>
+
+
+</mapper>

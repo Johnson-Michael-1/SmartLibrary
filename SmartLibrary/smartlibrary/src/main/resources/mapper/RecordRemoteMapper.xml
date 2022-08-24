@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.RecordRemoteMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.RecordRemote" >
+        <id column="open_id" property="openId" />
+        <result column="org_id" property="orgId"  />
+        <result column="org_name" property="orgName"  />
+        <result column="open_time" property="openTime" />
+        <result column="operator" property="operator"  />
+        <result column="dev_name" property="devName"  />
+        <result column="dev_sn" property="devSn"  />
+        <result column="open_result" property="openResult" />
+    </resultMap>
+
+    <sql id="SelectRecordRemoteVo">
+        open_id, org_id, org_name, open_time, operator, dev_name, dev_sn, open_result
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectRecordRemoteVo" />
+        from sl_record_remote
+        where open_id = #{openId}
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long" >
+        delete from sl_record_remote
+        where open_id in
+        <foreach collection="array" item="openId" open="(" separator="," close=")">
+            #{openId}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.RecordRemote" useGeneratedKeys="true">
+        insert into sl_record_remote ( org_id, org_name,
+          open_time, operator, dev_name,
+          dev_sn, open_result)
+        values ( #{orgId}, #{orgName},
+          #{openTime}, #{operator}, #{devName},
+          #{devSn}, #{openResult})
+    </insert>
+
+    <update id="updateRecordRemote" parameterType="com.ruoyi.smartlibrary.pojo.RecordRemote" >
+    update sl_record_remote
+    set org_id = #{orgId},
+      org_name = #{orgName},
+      open_time = #{openTime},
+      operator = #{operator},
+      dev_name = #{devName},
+      dev_sn = #{devSn},
+      open_result = #{openResult}
+    where open_id = #{openId}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.RecordRemote">
+        select
+        <include refid="SelectRecordRemoteVo" />
+        from sl_record_remote
+        <where>
+            <if test="orgId != null and orgId != ''">
+                AND org_id like concat('%', #{orgId}, '%')
+            </if>
+            <if test="openTime != null and openTime != ''">
+                AND open_time like concat('%', #{openTime}, '%')
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator like concat('%', #{operator},'%')
+            </if>
+            <if test="devName != null and devName != ''">
+                AND dev_name like concat('%', #{devName},'%')
+            </if>
+            <if test="devSn != null and devSn != ''">
+                AND dev_sn like concat('%', #{devSn}, '%')
+            </if>
+            <if test="openResult != null and openResult != ''">
+                AND open_result like concat('%', #{openResult},'%')
+            </if>
+        </where>
+        order by open_id desc
+    </select>
+
+
+</mapper>

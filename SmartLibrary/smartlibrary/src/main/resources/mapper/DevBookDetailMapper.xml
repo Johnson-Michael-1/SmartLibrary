@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.DevBookDetailMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.DevBookDetail" >
+        <id column="dev_id" property="devId" />
+        <result column="dev_sn" property="devSn" />
+        <result column="bk_ISBN" property="bkIsbn"  />
+        <result column="bk_rfid" property="bkRfid"  />
+        <result column="bk_name" property="bkName"  />
+        <result column="bk_img" property="bkImg"  />
+        <result column="bk_author" property="bkAuthor"  />
+        <result column="dev_name" property="devName"  />
+        <result column="org_name" property="orgName" />
+        <result column="dev_address" property="devAddress"  />
+        <result column="dev_remark" property="devRemark"  />
+    </resultMap>
+
+    <sql id="SelectDevBookDetailVo" >
+        dev_id, dev_sn, bk_ISBN, bk_rfid, bk_name, bk_img, bk_author, dev_name, org_name, dev_address, dev_remark
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectDevBookDetailVo" />
+        from sl_dev_book_detail
+        where dev_id = #{devId}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long" >
+        delete from sl_dev_book_detail
+        where dev_id = #{devId}
+    </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.DevBookDetail" useGeneratedKeys="true">
+        insert into sl_dev_book_detail (dev_sn, bk_ISBN, bk_rfid,
+          bk_name, bk_img, bk_author,
+          dev_name, org_name, dev_address, dev_remark)
+        values ( #{devSn}, #{bk_ISBN}, #{bk_rfid},
+          #{bk_name}, #{bk_img}, #{bk_author},
+          #{dev_name}, #{org_name}, #{dev_address}, #{dev_remark})
+   </insert>
+
+    <update id="updateById" parameterType="java.lang.Long" >
+        update sl_dev_book_detail
+        set dev_sn = #{devSn},
+          bk_ISBN = #{bk_ISBN},
+          bk_rfid = #{bk_rfid},
+          bk_name = #{bk_name},
+          bk_img = #{bk_img},
+          bk_author = #{bk_author},
+          dev_name = #{dev_name},
+          org_name = #{org_name},
+          dev_address = #{dev_address},
+          dev_remark = #{dev_remark}
+        where dev_id = #{devId}
+  </update>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select
+        <include refid="SelectDevBookDetailVo" />
+        from sl_dev_book_detail
+        order by dev_id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.BorrowMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.Borrow" >
+    <id column="bor_id" property="borId"  />
+    <id column="bk_ISBN" property="bkIsbn" />
+    <result column="dev_sn" property="devSn" />
+    <result column="dev_name" property="devName" />
+    <result column="back_name" property="backName" />
+    <result column="back_id_number" property="backIdNumber" />
+    <result column="bk_rfid" property="bkRfid" />
+    <result column="bk_name" property="bkName" />
+    <result column="rd_id_number" property="rdIdNumber" />
+    <result column="rd_name" property="rdName" />
+    <result column="rd_phone" property="rdPhone" />
+    <result column="borrow_time" property="borrowTime" />
+    <result column="renew_time" property="renewTime" />
+    <result column="should_back_time" property="shouldBackTime" />
+    <result column="return_time" property="returnTime" />
+    <result column="bk_state" property="bkState" />
+    <result column="renew_state" property="renewState" />
+    <result column="bk_overtime" property="bkOvertime" />
+    <result column="bk_price" property="bkPrice" />
+  </resultMap>
+
+  <sql id="SelectBorrowVo" >
+    bor_id, bk_ISBN, dev_sn, dev_name, back_name, back_id_number, bk_rfid, bk_name, rd_id_number, rd_name, rd_phone, borrow_time, renew_time, return_time, should_back_time,
+    bk_state, renew_state, bk_overtime, bk_price
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectBorrowVo" />
+    from sl_borrow
+    where bor_id = #{borId}
+  </select>
+
+
+  <delete id="deleteByIds" parameterType="java.lang.Long" >
+    delete from sl_borrow where bor_id in
+    <foreach collection="array" item="borId" open="(" separator="," close=")">
+      #{borId}
+    </foreach>
+  </delete>
+
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.Borrow" useGeneratedKeys="true">
+    insert into sl_borrow (bk_ISBN, dev_sn, dev_name, back_name, back_id_number, bk_rfid, bk_name, rd_id_number,
+      rd_name, rd_phone, borrow_time, renew_time, should_back_time,
+      return_time, bk_state,
+      <if test="renewState != null and renewState != ''">renew_state,</if>
+      bk_overtime, bk_price)
+    values (#{bkIsbn}, #{devSn}, #{devName}, #{backName}, #{backIdNumber}, #{bkRfid}, #{bkName}, #{rdIdNumber},
+      #{rdName}, #{rdPhone}, #{borrowTime}, #{renewTime}, #{shouldBackTime},
+      #{returnTime}, #{bkState},
+      <if test="renewState != null and renewState != ''">#{renewState},</if>
+      #{bkOvertime}, #{bkPrice})
+  </insert>
+
+  <update id="updateByBkIsbn" parameterType="com.ruoyi.smartlibrary.pojo.Borrow" >
+    update sl_borrow
+    <set>
+      <if test="borId != null and borId != ''">
+        bor_id = #{borId},
+      </if>
+      <if test="bkIsbn != null and bkIsbn != ''">
+        bk_ISBN = #{bkIsbn},
+      </if>
+      <if test="devSn != null and devSn != ''">
+        dev_sn = #{devSn},
+      </if>
+      <if test="devName != null and devName != ''">
+        dev_name = #{devName},
+      </if>
+      <if test="backName != null and backName != ''">
+        back_name = #{backName},
+      </if>
+      <if test="backIdNumber != null and backIdNumber != ''">
+        back_id_number = #{backIdNumber},
+      </if>
+      <if test="bkRfid != null and bkRfid != ''">
+        bk_rfid = #{bkRfid},
+      </if>
+      <if test="bkName != null and bkName != ''">
+        bk_name = #{bkName},
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        rd_id_number = #{rdIdNumber},
+      </if>
+      <if test="rdName != null and rdName != ''">
+        rd_name = #{rdName},
+      </if>
+      <if test="rdPhone != null and rdPhone != ''">
+        rd_phone = #{rdPhone},
+      </if>
+      <if test="borrowTime != null ">
+        borrow_time = #{borrowTime},
+      </if>
+      <if test="renewTime != null ">
+        renew_time = #{renewTime},
+      </if>
+      <if test="shouldBackTime != null ">
+        should_back_time = #{shouldBackTime},
+      </if>
+      <if test="returnTime != null ">
+        return_time = #{returnTime},
+      </if>
+      <if test="bkState != null and bkState != ''">
+        bk_state = #{bkState},
+      </if>
+      <if test="renewState != null and renewState != ''">
+        renew_state = #{renewState},
+      </if>
+      <if test="bkOvertime != null and bkOvertime != ''">
+        bk_overtime = #{bkOvertime},
+      </if>
+      <if test="bkPrice != null and bkPrice != ''">
+        bk_price = #{bkPrice}
+      </if>
+    </set>
+   where bk_ISBN = #{bkIsbn}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.Borrow">
+    select
+    <include refid="SelectBorrowVo" />
+    from sl_borrow
+    <where>
+      <if test="bkIsbn != null and bkIsbn != ''">
+        AND bk_ISBN like concat('%', #{bkIsbn}, '%')
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+      </if>
+      <if test="rdName != null and rdName != ''">
+        AND rd_name like concat('%', #{rdName}, '%')
+      </if>
+      <if test="bkState != null and bkState != ''">
+        AND bk_state like concat('%', #{bkState},'%')
+      </if>
+      <if test="bkOvertime != null and bkOvertime != ''">
+        AND bk_overtime like concat('%', #{bkOvertime},'%')
+      </if>
+    </where>
+    order by bor_id desc
+  </select>
+
+  <select id="readerBorrowList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.Borrow">
+    select
+    <include refid="SelectBorrowVo" />
+    from sl_borrow
+    <where>
+      <if test="rdName != null and rdName != ''">
+        AND rd_name like concat('%', #{rdName}, '%')
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+      </if>
+        AND bk_state = 0
+    </where>
+  </select>
+
+  <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.Borrow" >
+    update sl_borrow
+    <set>
+      <if test="bkIsbn != null and bkIsbn != ''">
+        bk_ISBN = #{bkIsbn},
+      </if>
+      <if test="devSn != null and devSn != ''">
+        dev_sn = #{devSn},
+      </if>
+      <if test="devName != null and devName != ''">
+        dev_name = #{devName},
+      </if>
+      <if test="backName != null and backName != ''">
+        back_name = #{backName},
+      </if>
+      <if test="backIdNumber != null and backIdNumber != ''">
+        back_id_number = #{backIdNumber},
+      </if>
+      <if test="bkRfid != null and bkRfid != ''">
+        bk_rfid = #{bkRfid},
+      </if>
+      <if test="bkName != null and bkName != ''">
+        bk_name = #{bkName},
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        rd_id_number = #{rdIdNumber},
+      </if>
+      <if test="rdName != null and rdName != ''">
+        rd_name = #{rdName},
+      </if>
+      <if test="rdPhone != null and rdPhone != ''">
+        rd_phone = #{rdPhone},
+      </if>
+      <if test="borrowTime != null ">
+        borrow_time = #{borrowTime},
+      </if>
+      <if test="borrowTime != null ">
+        renew_time = #{renewTime},
+      </if>
+      <if test="shouldBackTime != null ">
+        should_back_time = #{shouldBackTime},
+      </if>
+      <if test="returnTime != null ">
+        return_time = #{returnTime},
+      </if>
+      <if test="bkState != null and bkState != ''">
+        bk_state = #{bkState},
+      </if>
+      <if test="renewState != null and renewState != ''">
+        renew_state = #{renewState},
+      </if>
+      <if test="bkOvertime != null and bkOvertime != ''">
+        bk_overtime = #{bkOvertime},
+      </if>
+      <if test="bkPrice != null and bkPrice != ''">
+        bk_price = #{bkPrice}
+      </if>
+    </set>
+    where bor_id = #{borId}
+  </update>
+
+  <select id="selectByIsbn" resultMap="BaseResultMap" parameterType="string">
+    select
+    <include refid="SelectBorrowVo" />
+    from sl_borrow
+    where bk_ISBN = #{bkIsbn}
+  </select>
+
+  <update id="updateByRfid" parameterType="com.ruoyi.smartlibrary.pojo.Borrow">
+    update sl_borrow
+    <set>
+    <if test="bkState != null and bkState != ''">
+      bk_state = #{bkState},
+    </if>
+    <if test="returnTime != null ">
+      return_time = #{returnTime}
+    </if>
+    </set>
+    where bk_rfid = #{bkRfid}
+  </update>
+
+  <select id="selectBorrowState" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.ReaderInfo">
+    select
+    <include refid="SelectBorrowVo" />
+    from sl_borrow
+    <where>
+      <if test="rdName != null and rdName != ''">
+        AND rd_name like concat('%', #{rdName}, '%')
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+      </if>
+      <if test="rdPhone != null and rdPhone != ''">
+        AND rd_phone like concat('%', #{rdPhone}, '%')
+      </if>
+        AND bk_state = 0
+    </where>
+  </select>
+
+
+</mapper>

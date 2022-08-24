@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.ReaderInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.ReaderInfo" >
+    <id column="rd_id" property="rdId"  />
+    <id column="rd_number" property="rdNumber"  />
+    <result column="rd_id_number" property="rdIdNumber"  />
+    <result column="rd_wx_number" property="rdWxNumber"  />
+    <result column="rd_zfb_number" property="rdZfbNumber" />
+    <result column="rd_name" property="rdName" />
+    <result column="rd_phone" property="rdPhone"  />
+    <result column="rd_pic" property="rdPic"  />
+    <result column="rd_password" property="rdPassword" />
+    <result column="rd_sex" property="rdSex"  />
+    <result column="rd_state" property="rdState"  />
+    <result column="rd_remark" property="rdRemark" />
+    <result column="nick_name" property="nickName" />
+    <result column="dept_id" property="deptId" />
+    <result column="dept_name" property="deptName" />
+  </resultMap>
+
+  <sql id="SelectReaderInfoVo" >
+    rd_id, rd_number, rd_id_number, rd_wx_number, rd_zfb_number, rd_name, rd_phone,
+    rd_pic, rd_password, rd_sex, rd_state, rd_remark, nick_name, dept_id, dept_name
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectReaderInfoVo" />
+    from sl_readerinfo
+    where rd_id = #{rdId}
+  </select>
+
+  <delete id="deleteByIds" parameterType="java.lang.Long" >
+    delete from sl_readerinfo where rd_id in
+    <foreach collection="array" item="rdId" open="(" separator="," close=")">
+      #{rdId}
+    </foreach>
+  </delete>
+
+<!--  <update id="deleteByIds" parameterType="java.lang.Long">-->
+<!--    update sl_readerinfo-->
+<!--    set rd_state = 2-->
+<!--    where rd_id in-->
+<!--    <foreach collection="array" item="rdId" open="(" separator="," close=")">-->
+<!--      #{rdId}-->
+<!--    </foreach>-->
+<!--  </update>-->
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.ReaderInfo" useGeneratedKeys="true">
+    insert into sl_readerinfo (rd_number, rd_id_number, rd_wx_number,
+      rd_zfb_number, rd_name, rd_phone, rd_pic,
+    <if test="rdPassword != null and rdPassword != ''">rd_password,</if>
+     rd_sex,
+    <if test="rdState != null and rdState != ''">rd_state,</if>
+      rd_remark, nick_name, dept_id, dept_name)
+    values ( #{rdNumber}, #{rdIdNumber}, #{rdWxNumber},
+      #{rdZfbNumber}, #{rdName}, #{rdPhone}, #{rdPic},
+    <if test="rdPassword != null and rdPassword != ''">#{rdPassword},</if>
+     #{rdSex},
+    <if test="rdState != null and rdState != ''">#{rdState},</if>
+      #{rdRemark}, #{nickName}, #{deptId}, #{deptName})
+  </insert>
+
+  <update id="updateReaderInfo" parameterType="com.ruoyi.smartlibrary.pojo.ReaderInfo" >
+    update sl_readerinfo
+    set
+      rd_number = #{rdNumber},
+      rd_id_number = #{rdIdNumber},
+      rd_wx_number = #{rdWxNumber},
+      rd_zfb_number = #{rdZfbNumber},
+      rd_name = #{rdName},
+      rd_phone = #{rdPhone},
+      rd_pic = #{rdPic},
+      rd_password = #{rdPassword},
+      rd_sex = #{rdSex},
+      rd_state = #{rdState},
+      rd_remark = #{rdRemark},
+      nick_name = #{nickName},
+      dept_id = #{deptId},
+      dept_name = #{deptName}
+    where rd_id_number = #{rdIdNumber}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.ReaderInfo">
+    select
+    <include refid="SelectReaderInfoVo" />
+    from sl_readerinfo
+    <where>
+      <if test="deptId != null and deptId != 0">
+        AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET(#{deptId}, ancestors) ))
+      </if>
+      <if test="rdName != null and rdName != ''">
+        AND rd_name like concat('%', #{rdName}, '%')
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+      </if>
+      <if test="rdPhone != null and rdPhone != ''">
+        AND rd_phone like concat('%', #{rdPhone}, '%')
+      </if>
+      <if test="rdSex != null and rdSex != ''">
+        AND rd_sex like concat('%', #{rdSex},'%')
+      </if>
+      <if test="rdState != null and rdState != ''">
+        AND rd_state like concat('%', #{rdState},'%')
+      </if>
+    </where>
+    order by rd_id desc
+  </select>
+
+
+  <select id="selectReaderInfo" parameterType="com.ruoyi.smartlibrary.pojo.ReaderInfo" resultMap="BaseResultMap">
+    select
+    <include refid="SelectReaderInfoVo" />
+    from sl_readerinfo
+    <where>
+      <if test="rdName != null and rdName != ''">
+        AND rd_name like concat('%', #{rdName}, '%')
+      </if>
+      <if test="rdIdNumber != null and rdIdNumber != ''">
+        AND rd_id_number like concat('%', #{rdIdNumber}, '%')
+      </if>
+      <if test="rdPhone != null and rdPhone != ''">
+        AND rd_phone like concat('%', #{rdPhone}, '%')
+      </if>
+      <if test="rdPassword != null and rdPassword != ''">
+        AND rd_password like concat('%', #{rdPassword}, '%')
+      </if>
+      <if test="rdState != null and rdState != ''">
+        AND rd_state like concat('%', #{rdState}, '%')
+      </if>
+    </where>
+  </select>
+
+</mapper>

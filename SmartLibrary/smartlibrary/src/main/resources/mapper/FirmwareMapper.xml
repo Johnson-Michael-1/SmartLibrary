@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.FirmwareMapper" >
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.Firmware" >
+        <id column="id" property="id"  />
+        <result column="apk_name" property="apkName" />
+        <result column="version" property="version" />
+        <result column="download_url" property="downloadUrl"  />
+        <result column="update_log" property="updateLog"  />
+        <result column="download_count" property="downloadCount" />
+        <result column="upload_time" property="uploadTime" />
+    </resultMap>
+
+    <sql id="SelectFirmwareVo" >
+    id, apk_name, version, download_url, update_log, download_count, upload_time
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="SelectFirmwareVo" />
+        from sl_firmware
+        where id = #{id}
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long">
+        delete from sl_firmware where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.Firmware" useGeneratedKeys="true">
+        insert into sl_firmware ( apk_name, version, download_url, update_log, download_count, upload_time )
+        values ( #{apkName}, #{version},#{downloadUrl},
+         #{updateLog}, #{downloadCount}, #{uploadTime} )
+    </insert>
+
+    <update id="updateById" parameterType="com.ruoyi.smartlibrary.pojo.Firmware" >
+        update sl_firmware
+        set
+          apk_name = #{apkName},
+          version = #{version},
+          download_url = #{downloadUrl},
+          update_log = #{updateLog},
+          download_count = #{downloadCount},
+          upload_time = #{uploadTime}
+        where id = #{id}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.ruoyi.smartlibrary.pojo.Firmware">
+        select
+        <include refid="SelectFirmwareVo" />
+        from sl_firmware
+        <where>
+            <if test="apkName != null and apkName != ''">
+                AND apk_name like concat('%', #{apkName}, '%')
+            </if>
+            <if test="version != null and version != ''">
+                AND version like concat('%', #{version}, '%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="getLatestVersion" resultMap="BaseResultMap" >
+        select
+        <include refid="SelectFirmwareVo" />
+        from sl_firmware
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.smartlibrary.mapper.AlarmRealTimeMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ruoyi.smartlibrary.pojo.AlarmRealTime" >
+    <id column="alarm_id" property="alarmId" />
+    <result column="dev_sn" property="devSn" />
+    <result column="dev_name" property="devName" />
+    <result column="alarm_time" property="alarmTime"  />
+    <result column="alarm_type" property="alarmType"  />
+    <result column="alarm_reason" property="alarmReason" />
+    <result column="alarm_address" property="alarmAddress" />
+  </resultMap>
+
+  <sql id="SelectAlarmVo" >
+    alarm_id, dev_sn, dev_name, alarm_time, alarm_type, alarm_reason, alarm_address
+  </sql>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="SelectAlarmVo" />
+    from sl_alarm_real_time
+    where alarm_id = #{alarmId}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from sl_alarm_real_time
+    where alarm_id = #{alarmId}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.smartlibrary.pojo.AlarmRealTime" useGeneratedKeys="true">
+    insert into sl_alarm_real_time ( dev_sn, dev_name, alarm_time,
+      alarm_type, alarm_reason, alarm_address
+      )
+    values ( #{devSn}, #{devName}, #{alarmTime},
+      #{alarmType}, #{alarmReason}, #{alarmAddress}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="java.lang.Long" >
+    update sl_alarm_real_time
+    set dev_sn = #{devSn},
+      dev_name = #{devName},
+      alarm_time = #{alarmTime},
+      alarm_type = #{alarmType},
+      alarm_reason = #{alarmReason},
+      alarm_address = #{alarmAddress}
+    where alarm_id = #{alarmId}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="SelectAlarmVo" />
+    from sl_alarm_real_time
+    order by alarm_id desc
+  </select>
+
+</mapper>
